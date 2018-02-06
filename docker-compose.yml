@@ -1,0 +1,10 @@
+version: '3'
+services:
+  postgres:
+    build: 
+      context: ./postgres
+      dockerfile: Dockerfile-postgres
+    environment:
+      - APPUSER_PASSWORD="${ATMOS_APPUSER_PW}"
+      - INGESTUSER_PASSWORD="${ATMOS_INGESTUSER_PW}"
+      - POSTGRES_PASSWORD="${ATMOS_POSTGRES_PW}"
