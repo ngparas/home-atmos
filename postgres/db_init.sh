@@ -11,7 +11,7 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" -d appdb <<-EOSQL
     CREATE TABLE readings (
         idx SERIAL PRIMARY KEY,
         device_id VARCHAR NOT NULL,
-        time_valid TIMESTAMP WITH TIME ZONE,
+        signal_time TIMESTAMP WITH TIME ZONE,
         signal_name VARCHAR,
         signal_value NUMERIC
     );
