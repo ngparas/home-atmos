@@ -8,3 +8,20 @@ services:
       - APPUSER_PASSWORD="${ATMOS_APPUSER_PW}"
       - INGESTUSER_PASSWORD="${ATMOS_INGESTUSER_PW}"
       - POSTGRES_PASSWORD="${ATMOS_POSTGRES_PW}"
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+  kafka:  # h/t https://github.com/tcjennings/kafka-docker/blob/master/docker-compose.yml
+    image: wurstmeister/kafka
+    ports:
+      - "9094:9094"
+    environment:
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_ADVERTISED_HOST_NAME: 192.168.99.100
+      KAFKA_ADVERTISED_PORT: 9094
+      KAFKA_ADVERTISED_PROTOCOL_NAME: OUTSIDE
+      KAFKA_PROTOCOL_NAME: INSIDE
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
