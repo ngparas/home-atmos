@@ -8,3 +8,34 @@ services:
       - APPUSER_PASSWORD="${ATMOS_APPUSER_PW}"
       - INGESTUSER_PASSWORD="${ATMOS_INGESTUSER_PW}"
       - POSTGRES_PASSWORD="${ATMOS_POSTGRES_PW}"
+  producer-web:
+    build: 
+      context: ./producer-web
+      dockerfile: Dockerfile-producerweb
+    environment:
+      PORT: 8080
+      BOOTSTRAP_SERVERS: 192.168.1.199:9094
+      SENSOR_TOPIC: sensors-0
+    ports:
+      - "8080:8080"
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+  kafka:  # h/t https://github.com/tcjennings/kafka-docker/blob/master/docker-compose.yml
+    image: wurstmeister/kafka
+    ports:
+      - "9094:9094"
+    environment:
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: 192.168.1.199:9094
+      KAFKA_ADVERTISED_PROTOCOL_NAME: OUTSIDE
+      KAFKA_PROTOCOL_NAME: INSIDE
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_HOST_NAME: 192.168.1.199
+      KAFKA_ADVERTISED_PORT: 9094
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+  # kafka-consumer:  # h/t https://github.com/tcjennings/kafka-docker/blob/master/docker-compose.yml
+  #   image: wurstmeister/kafka
+  #   command: /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server 192.168.99.100:9094 --topic topic-A --from-beginning
