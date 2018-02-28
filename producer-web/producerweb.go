@@ -1,4 +1,7 @@
 package main
+// Parts of this file adapted from Confluent-Go Examples
+// https://github.com/confluentinc/confluent-kafka-go/blob/master/examples/producer_channel_example/producer_channel_example.go
+// which uses the Apache 2.0 License - http://www.apache.org/licenses/LICENSE-2.0
 
 import (
 	"fmt"
