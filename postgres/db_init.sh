@@ -9,11 +9,11 @@ EOSQL
 
 psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" -d appdb <<-EOSQL
     CREATE TABLE readings (
-        idx SERIAL PRIMARY KEY,
         device_id VARCHAR NOT NULL,
-        signal_time TIMESTAMP WITH TIME ZONE,
-        signal_name VARCHAR,
-        signal_value NUMERIC
+        signal_name VARCHAR NOT NULL,
+        signal_time TIMESTAMP WITH TIME ZONE NOT NULL,
+        signal_value NUMERIC,
+        PRIMARY KEY(device_id, signal_name, signal_time)
     );
 EOSQL
 
