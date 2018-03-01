@@ -23,5 +23,4 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" -d appdb <<-EOSQL
     GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO ingestuser;
 EOSQL
 
-
-
+# note that pg_hba.conf location is: $PGDATA/pg_hba.conf

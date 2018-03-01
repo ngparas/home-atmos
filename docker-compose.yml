@@ -5,9 +5,11 @@ services:
       context: ./postgres
       dockerfile: Dockerfile-postgres
     environment:
-      - APPUSER_PASSWORD="${ATMOS_APPUSER_PW}"
-      - INGESTUSER_PASSWORD="${ATMOS_INGESTUSER_PW}"
-      - POSTGRES_PASSWORD="${ATMOS_POSTGRES_PW}"
+      APPUSER_PASSWORD: ${ATMOS_APPUSER_PW}
+      INGESTUSER_PASSWORD: ${ATMOS_INGESTUSER_PW}
+      POSTGRES_PASSWORD: ${ATMOS_POSTGRES_PW}
+    ports:
+      - "5432:5432"
   producer-web:
     build: 
       context: ./producer-web
@@ -18,6 +20,18 @@ services:
       SENSOR_TOPIC: sensors-0
     ports:
       - "8080:8080"
+  consumer-pg:
+    build: 
+      context: ./consumer-pg
+      dockerfile: Dockerfile-consumerpg
+    environment:
+      BOOTSTRAP_SERVERS: 192.168.1.199:9094
+      SENSOR_TOPICS: sensors-0
+      CONSUMER_GROUP_ID: pg-sink
+      POSTGRES_USERNAME: ingestuser
+      POSTGRES_PASSWORD: ${ATMOS_INGESTUSER_PW}
+      POSTGRES_DATABASE: appdb
+      POSTGRES_ADDRESS: postgres:5432
   zookeeper:
     image: wurstmeister/zookeeper
     ports:
